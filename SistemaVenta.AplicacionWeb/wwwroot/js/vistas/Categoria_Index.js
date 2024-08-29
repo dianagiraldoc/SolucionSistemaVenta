@@ -6,6 +6,7 @@
 
 
 let tablaData;
+
 $(document).ready(function () {
 
     tablaData = $('#tbdata').DataTable({
@@ -63,6 +64,7 @@ function mostrarModal(modelo = MODELO_BASE) {
     $("#modalData").modal("show")
 }
 
+
 $("#btnNuevo").click(function () {
     mostrarModal()
 })
@@ -70,11 +72,13 @@ $("#btnNuevo").click(function () {
 
 $("#btnGuardar").click(function () {
 
+
     if ($("#txtDescripcion").val().trim() == "") {
         toastr.warning("", "Debe completar el campo: Descripcion")
         $("#txtDescripcion").focus()
         return;
     }
+
 
     const modelo = structuredClone(MODELO_BASE);
     modelo["idCategoria"] = parseInt($("#txtId").val())
@@ -100,15 +104,16 @@ $("#btnGuardar").click(function () {
 
                     tablaData.row.add(responseJson.objeto).draw(false)
                     $("#modalData").modal("hide") //////////////////////////////////////
-                    swal("Listo!", "El usuario fue creado", "success")
+                    swal("Listo!", "La categoria fue creada", "success")
                 } else {
                     swal("Lo sentimos", responseJson.mensaje, "error")
                 }
             })
     } else {
-        fetch("/Usuario/Editar", {
+        fetch("/Categoria/Editar", {
             method: "PUT",
-            body: formData
+            headers: { "Content-Type": "application/json; charset=utf-8" },
+            body: JSON.stringify(modelo)
         })
             .then(response => {
                 $("#modalData").find("div.modal-content").LoadingOverlay("hide");
@@ -121,14 +126,17 @@ $("#btnGuardar").click(function () {
                     tablaData.row(filaSeleccionada).data(responseJson.objeto).draw(false);
                     filaSeleccionada = null;
                     $("#modalData").modal("hide")
-                    swal("Listo!", "El usuario fue modificado", "success")
+                    swal("Listo!", "La categoria fue modificada", "success")
                 } else {
                     swal("Lo sentimos", responseJson.mensaje, "error")
                 }
             })
 
     }
+
+
 })
+
 
 let filaSeleccionada;
 $("#tbdata tbody").on("click", ".btn-editar", function () {
@@ -145,6 +153,8 @@ $("#tbdata tbody").on("click", ".btn-editar", function () {
 
 })
 
+
+
 $("#tbdata tbody").on("click", ".btn-eliminar", function () {
 
     let fila;
@@ -158,7 +168,7 @@ $("#tbdata tbody").on("click", ".btn-eliminar", function () {
     //mostrarModal(data);//revisr parece que no va video 11 1:09:18
     swal({ // el swal se forma de titulo, del mensaje y el tipo sin necesidad de decirlo, pero aqui armaremos asi:
         title: "¿Está seguro?",           //"Lo sentimos", responseJson.mensaje, "error"
-        text: `Eliminar al usuario "${data.nombre}"`,
+        text: `Eliminar la categoría "${data.descripcion}"`,
         type: "warning",
         showCancelButton: true,
         confirmButtonClass: "btn-danger",
@@ -168,11 +178,12 @@ $("#tbdata tbody").on("click", ".btn-eliminar", function () {
         closeOnCancel: true
     },
         function (respuesta) {
+
             if (respuesta) {
 
                 $(".showSweetAlert").LoadingOverlay("show");
 
-                fetch(`/Usuario/Eliminar?IdUsuario=${data.idUsuario}`, {
+                fetch(`/Categoria/Eliminar?IdCategoria=${data.idCategoria}`, {
                     method: "DELETE"
                 })
                     .then(response => {
@@ -185,8 +196,7 @@ $("#tbdata tbody").on("click", ".btn-eliminar", function () {
 
                             tablaData.row(fila).remove().draw()
 
-
-                            swal("Listo!", "El usuario fue eliminado", "success")
+                            swal("Listo!", "La categoria fue eliminada", "success")
                         } else {
                             swal("Lo sentimos", responseJson.mensaje, "error")
                         }

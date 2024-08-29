@@ -10,7 +10,6 @@ const MODELO_BASE={
     urlFoto:""
 }
 
-
 let tablaData;
 $(document).ready(function () {
 
@@ -84,6 +83,7 @@ $(document).ready(function () {
 
  })
 
+
 function mostrarModal(modelo = MODELO_BASE) {
     $("#txtId").val(modelo.idUsuario)
     $("#txtNombre").val(modelo.nombre)
@@ -97,10 +97,10 @@ function mostrarModal(modelo = MODELO_BASE) {
     $("#modalData").modal("show")
 }
 
+
 $("#btnNuevo").click(function () {
     mostrarModal()
 })
-
 
 
 $("#btnGuardar").click(function () {
@@ -124,6 +124,7 @@ $("#btnGuardar").click(function () {
     modelo["esActivo"] = $("#cboEstado").val()
 
     const inputFoto = document.getElementById("txtFoto")
+
     const formData = new FormData();
 
     formData.append("foto", inputFoto.files[0])
@@ -175,6 +176,8 @@ $("#btnGuardar").click(function () {
             })
 
     }
+
+
 })
 
 let filaSeleccionada;
